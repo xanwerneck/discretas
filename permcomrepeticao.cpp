@@ -7,10 +7,13 @@ void printPermutacaoComRepeticaoRecursao(const char alf[], char *alfUsed,
   if (wordSize == strlen(alf)) {
     printf("%s\n", word);
   } else {
+    char alreadyUsed[256];
+    memset(alreadyUsed, 0, 256);
     for(int i=0; i < strlen(alf); i++) {
-      if (!alfUsed[i]) {
+      if (!alfUsed[i] && !alreadyUsed[alf[i]]) {
         int nextLetterI = strlen(word);
         alfUsed[i] = 1;
+        alreadyUsed[alf[i]] = 1;
         word[nextLetterI] = alf[i];
         printPermutacaoComRepeticaoRecursao(alf, alfUsed, word, wordSize+1);
         word[nextLetterI] = 0;
