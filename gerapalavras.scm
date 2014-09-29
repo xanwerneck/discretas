@@ -1,0 +1,8 @@
+(define brutal-print (lambda (alf w)
+  (if (= (string-length w) (string-length alf))
+  	(begin (display w) (newline))
+  	(do ((i 0 (1+ i))) ((>= i (string-length alf)))
+	  (brutal-print alf (string-append w (substring alf i (1+ i))))
+	)
+  )))
+(brutal-print "abc" "")

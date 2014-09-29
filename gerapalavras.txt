@@ -1,0 +1,26 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+ 
+/* Name of the class has to be "Main" only if the class is public. */
+class Discretas
+{
+	public static char[] alfabeto = { 'a', 'b', 'c' };
+	public static char[] palavra = new char[3];
+	public static int n = 3;
+ 
+	public static void main (String[] args) {
+		GeraPalavras(n);
+	}
+ 
+	public static void GeraPalavras(int i){
+		if(i==0){
+			System.out.printf("%c%c%c\n", palavra[0], palavra[1], palavra[2]);
+		} else {
+			for(int j = 0; j < n; j++){
+				palavra[n-i] = alfabeto[j];
+				GeraPalavras(i-1);
+			}
+		}
+	}
+}
