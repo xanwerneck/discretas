@@ -1,13 +1,16 @@
-def troco_enumeracao(moedas, valor, conjunto=Hash.new(0))
+def troco_enumeracao(moedas, valor, quantidade_moedas=Hash.new(0))
   if valor == 0
-    p conjunto
+    quantidade_moedas.each_pair do |moeda, quantidade|
+      print "#{quantidade} moeda(s) de #{moeda}, "
+    end
+    print "\n"
   elsif !moedas.empty?
     moeda = moedas.first
     novas_moedas = moedas - [moedas.first]
     for i in 0..(valor/moeda)
-      conjunto[moeda] += i
-      troco_enumeracao(novas_moedas, valor-moeda*i, conjunto)
-      conjunto[moeda] -= i
+      quantidade_moedas[moeda] += i
+      troco_enumeracao(novas_moedas, valor-moeda*i, quantidade_moedas)
+      quantidade_moedas[moeda] -= i
     end
   end
 end
