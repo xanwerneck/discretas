@@ -25,7 +25,7 @@ end
 words = File.readlines("anagramas.txt")
 
 anagramas = words.map do |word|
-  get_anagramas(word.strip.upcase.split(//))
+  get_anagramas(word.strip.upcase.chars)
 end
 
 File.open("saida.txt", "w"){|f| f.write anagramas.flatten.join("\n")}
