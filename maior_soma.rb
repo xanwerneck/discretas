@@ -1,20 +1,63 @@
-def bigger_sum(a)
-  somas = Hash.new(0)
+def hkey(range)
+  if range.exclude_end?
+    :"#{range.begin}-#{range.end-1}"
+  else
+    :"#{range.begin}-#{range.end}"
+  end
+end
+
+def bigger_sum(a, b=nil,e=nil, sums={})
   n = a.size
-  a.each_with_index do |_, i|
-    for j in i...n
-      somas[i..j] += somas[i..(j-1)] + a[j]
-    end
+  if b.nil?
+    b = 0
+    e = a.size
   end
-  maior = 0
-  range_maior = nil
-  somas.each do |range, soma|
-    if soma > maior
-      maior = soma
-      range_maior = range
+  if e - b > 2
+    lb = b
+    le = b+(e-b)/2
+    rb = le
+    re = e
+    lsum = bigger_sum(a, lb, le, sums)
+    rsum = bigger_sum(a, rb, re, sums)
+    sums[hkey(lb...le)] = lsum
+    sums[hkey(rb...re)] = rsum
+    lcross = rsum
+    for i in 1...(le-lb)
+      j = le - i
+      lcross += a[j]
+      sums[hkey(j...le)] = lcross
     end
+
+    rcross = lsum
+    for i in rb...(re-1)
+      rcross += a[i]
+      sums[hkey(rb..i)] = rcross
+    end
+
+    sum = lsum + rsum
+    sums[hkey(b...e)] = sum
+
+    if b == 0 && e == n
+      bigger = 0
+      bigger_range = nil
+      sums.each do |range, sum|
+        if sum > bigger
+          bigger = sum
+          bigger_range = range
+        end
+      end
+      bigger_range.to_s.split("-").map(&:to_i)
+    else
+      sum
+    end
+  elsif e - b == 2
+    sums[hkey(b..b)] = a[b]
+    sums[hkey((e-1)..(e-1))] = a[e-1]
+    a[b] + a[e-1]
+  else
+    sums[hkey(b..b)] = a[b]
+    a[b]
   end
-  [range_maior.begin, range_maior.end]
 end
 
 TEST_CASES = [
