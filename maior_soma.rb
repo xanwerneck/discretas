@@ -6,7 +6,7 @@ def hkey(range)
   end
 end
 
-def bigger_sum(a, b=nil,e=nil, sums={})
+def bigger_sum(a, b=nil,e=nil)
   n = a.size
   if b.nil?
     b = 0
@@ -17,46 +17,64 @@ def bigger_sum(a, b=nil,e=nil, sums={})
     le = b+(e-b)/2
     rb = le
     re = e
-    lsum = bigger_sum(a, lb, le, sums)
-    rsum = bigger_sum(a, rb, re, sums)
-    sums[hkey(lb...le)] = lsum
-    sums[hkey(rb...re)] = rsum
+    lbig, lbig_range, lsum = bigger_sum(a, lb, le)
+    rbig, rbig_range, rsum = bigger_sum(a, rb, re)
+    if lbig > rbig
+      big = lbig
+      big_range = lbig_range
+    else
+      big = rbig
+      big_range = rbig_range
+    end
+
     lcross = rsum
     for i in 1...(le-lb)
       j = le - i
       lcross += a[j]
-      sums[hkey(j...le)] = lcross
+      if lcross > big
+        big = lcross
+        big_range = hkey(j...le)
+      end
     end
 
     rcross = lsum
     for i in rb...(re-1)
       rcross += a[i]
-      sums[hkey(rb..i)] = rcross
+      if rcross > big
+        big = rcross
+        big_range = hkey(rb..i)
+      end
     end
 
     sum = lsum + rsum
-    sums[hkey(b...e)] = sum
+    if sum > big
+      big = sum
+      big_range = hkey(b...e)
+    end
 
     if b == 0 && e == n
-      bigger = 0
-      bigger_range = nil
-      sums.each do |range, sum|
-        if sum > bigger
-          bigger = sum
-          bigger_range = range
-        end
-      end
-      bigger_range.to_s.split("-").map(&:to_i)
+      return big_range.to_s.split("-").map(&:to_i)
     else
-      sum
+      return [big, big_range, sum]
     end
   elsif e - b == 2
-    sums[hkey(b..b)] = a[b]
-    sums[hkey((e-1)..(e-1))] = a[e-1]
-    a[b] + a[e-1]
+    lsum = a[b]
+    rsum = a[e-1]
+    sum = a[b] + a[e-1]
+    if lsum > rsum
+      big = lsum
+      big_range = hkey(b..b)
+    else
+      big = rsum
+      big_range = hkey((e-1)..(e-1))
+    end
+    if sum > big
+      return [sum, hkey(b...e), sum]
+    else
+      return [big, big_range, sum]
+    end
   else
-    sums[hkey(b..b)] = a[b]
-    a[b]
+    return [a[b], hkey(b..b), a[b]]
   end
 end
 
